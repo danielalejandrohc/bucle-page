@@ -7,109 +7,61 @@
   const projects = {
     interior: [
       {
-        title: { en: 'Warm Minimal Apartment', es: 'Apartamento Minimal Cálido' },
+        title: { en: 'TRELUM Apartment', es: 'Apartamento TRELUM' },
         description: {
-          en: 'A calm, functional interior with warm wood tones and natural light.',
-          es: 'Un interior sereno y funcional con tonos de madera cálidos y luz natural.'
+          en: 'Located in the exclusive Torre Trelum, this apartment was conceived as a retreat of peace and relaxation for its owner, envisioned as an ideal space for single living and entertaining, taking advantage of its commanding view to the south of San Salvador.\n\nThe main challenge was to integrate his belongings into the design without compromising the harmony of the space, achieving a sophisticated and masculine atmosphere without becoming overdone.',
+          es: 'Ubicado en la exclusiva Torre Trelum, este apartamento fue concebido como un refugio de paz y relajación para su propietario, quien lo imaginó como un espacio ideal para la vida de soltero y el entretenimiento, aprovechando su imponente vista al sur de San Salvador.\n\nEl reto principal fue integrar sus pertenencias al diseño sin comprometer la armonía del espacio, logrando una atmósfera sofisticada y masculina sin caer en lo sobrecargado.'
         },
+        preview_image: './assets/projects/trelum/trelum-1.jpg',
         images: [
-          './assets/interior-design/img1.png',
-          './assets/interior-design/image.png',
-          './assets/placeholder.svg',
-          './assets/placeholder.svg'
+          './assets/projects/trelum/trelum-1.jpg',
+          './assets/projects/trelum/trelum-2.jpg',
+          './assets/projects/trelum/trelum-3.jpg',
+          './assets/projects/trelum/trelum-4.jpg',
+          './assets/projects/trelum/trelum-5.jpg',
+          './assets/projects/trelum/trelum-6.jpg'
         ]
       },
       {
-        title: 'Textured Living Room',
-        description: 'Soft textures and layered lighting for a cozy, modern feel.',
+        title: { en: 'OTAKU house', es: 'Casa OTAKU' },
+        description: {
+          en: 'An apartment designed for a young professional that blends social life and working from home. The public area was conceived as a flexible environment where the kitchen acts as the focal point, structuring the dynamics of hosting guests and working in a home office.\n\nThrough the strategic use of color and materials, the presence of the kitchen unit is emphasized as the organizing axis of the social area. The decision to concentrate the investment in this environment responds to its functional and symbolic value in everyday life.\nThe selection of furnishings and the layout respond to the need to create a functional, versatile environment with its own character.\nAt Bucle, we understand design as an accessible tool for expression, capable of reflecting identity without giving up warmth or spatial coherence.',
+          es: 'Un apartamento diseñado para un joven profesional que combina vida social y trabajo en casa. El espacio público se concibió como un entorno flexible donde la cocina actúa como punto focal, articulando las dinámicas de recibir invitados y trabajar en home office.\n\nA través del uso estratégico del color y materiales, se potencia la presencia del mueble de cocina como eje articulador del área social. La decisión de concentrar la inversión en este ambiente responde a su valor funcional y simbólico en la vida cotidiana.\nLa selección de mobiliario y la distribución responden a la necesidad de crear un ambiente funcional, versátil y con carácter propio.\nEn Bucle, entendemos el diseño como una herramienta de expresión accesible, capaz de reflejar identidad sin renunciar a la calidez ni a la coherencia espacial.'
+        },
+        preview_image: './assets/projects/otaku/fabysalmeronphoto-1.jpg',
         images: [
-          './assets/placeholder.svg',
-          './assets/placeholder.svg'
-        ]
-      },
-      {
-        title: 'Compact Workspace',
-        description: 'Efficient millwork and acoustic comfort in a small footprint.',
-        images: [
-          './assets/placeholder.svg'
-        ]
-      },
-      {
-        title: 'Serene Bedroom',
-        description: 'Neutral palette with subtle contrasts and integrated storage.',
-        images: [
-          './assets/placeholder.svg',
-          './assets/placeholder.svg'
+          './assets/projects/otaku/fabysalmeronphoto-1.jpg',
+          './assets/projects/otaku/fabysalmeronphoto-0020.jpg',
+          './assets/projects/otaku/fabysalmeronphoto-9276.jpg',
+          './assets/projects/otaku/fabysalmeronphoto-9489.jpg',
+          './assets/projects/otaku/PHOTO-2025-09-14-15-43-58.jpg',
+          './assets/projects/otaku/PHOTO-2025-09-14-15-43-59.jpg'
         ]
       }
     ],
-    residential: [
+    architecture: [
       {
-        title: 'Courtyard Family Home',
-        description: 'A modern residence centered around an airy courtyard for indoor-outdoor living.',
+        title:  { en: 'Country house', es: 'Casa campo' },
+        description: {
+          es: 'Diseñada como un refugio para el descanso y la conexión, esta vivienda acoge a una pareja joven que soñaba con un lugar para compartir con familia y amigos, respirar aire puro y disfrutar de la compañía de sus cocker spaniel.\n\nLa distribución responde a un deseo claro: que el área social —amplia, luminosa y abierta al entorno— fuera el corazón de la casa. Los dormitorios, en cambio, se reducen a lo esencial, priorizando el tiempo compartido sobre lo privado.\n\nUna casa pensada para recibir, para celebrar y para desconectarse, sin dejar de lado la calidez de lo cotidiano.',
+          en: 'Designed as a retreat for rest and connection, this home welcomes a young couple who dreamed of a place to share with family and friends, breathe fresh air, and enjoy the company of their cocker spaniels.\n\nThe layout responds to a clear desire: for the social area—spacious, bright, and open to the surroundings—to be the heart of the house. The bedrooms, by contrast, are reduced to the essentials, prioritizing shared time over the private.\n\nA home conceived for hosting, celebrating, and disconnecting, without leaving behind the warmth of the everyday.'
+        },
+        preview_image: './assets/projects/campo/R01.png',
         images: [
-          './assets/residential-design/image.png',
-          './assets/placeholder.svg'
+          './assets/projects/campo/R01.png',
+          './assets/projects/campo/R02.png',
+          './assets/projects/campo/R04.png',
+          './assets/projects/campo/R05.png'
         ]
       },
-      {
-        title: 'Hillside Residence',
-        description: 'Stepped volumes to adapt to slope and maximize views.',
-        images: [
-          './assets/placeholder.svg',
-          './assets/placeholder.svg'
-        ]
-      },
-      {
-        title: 'Urban Infill House',
-        description: 'Light-filled narrow lot home with central lightwell.',
-        images: [
-          './assets/placeholder.svg'
-        ]
-      },
-      {
-        title: 'Garden Pavilion',
-        description: 'A small annex opening to the landscape with screened façades.',
-        images: [
-          './assets/placeholder.svg'
-        ]
-      },
-      {
-        title: 'Coastal Retreat',
-        description: 'Simple geometry and durable materials for seaside climate.',
-        images: [
-          './assets/placeholder.svg'
-        ]
-      }
     ],
     remodeling: [
       {
         title: 'Kitchen Revitalization',
         description: 'A compact kitchen transformed for flow, storage, and durable finishes.',
+        preview_image: './assets/remodelation/image.png',
         images: [
           './assets/remodelation/image.png',
-          './assets/placeholder.svg'
-        ]
-      },
-      {
-        title: 'Bathroom Refresh',
-        description: 'Optimized layout, bright finishes, and improved ventilation.',
-        images: [
-          './assets/placeholder.svg'
-        ]
-      },
-      {
-        title: 'Living Area Update',
-        description: 'Open plan with better daylight and integrated storage.',
-        images: [
-          './assets/placeholder.svg',
-          './assets/placeholder.svg'
-        ]
-      },
-      {
-        title: 'Facade Renewal',
-        description: 'Envelope improvements for energy efficiency and presence.',
-        images: [
           './assets/placeholder.svg'
         ]
       }
@@ -118,29 +70,9 @@
       {
         title: 'Permit Package A-Z',
         description: 'Complete permit management including drawings, submissions, and approvals.',
+        preview_image: './assets/permit/image.png',
         images: [
           './assets/permit/image.png',
-          './assets/placeholder.svg'
-        ]
-      },
-      {
-        title: 'Change of Use',
-        description: 'Advisory and documentation for program changes.',
-        images: [
-          './assets/placeholder.svg'
-        ]
-      },
-      {
-        title: 'Minor Works Authorization',
-        description: 'Expedited documentation for small interventions.',
-        images: [
-          './assets/placeholder.svg'
-        ]
-      },
-      {
-        title: 'Compliance Review',
-        description: 'Code check and report before submission.',
-        images: [
           './assets/placeholder.svg'
         ]
       }
@@ -159,7 +91,7 @@
       brandName: 'Your Architecture Studio',
       brandShort: 'Architecture Studio',
       navInterior: 'Interior',
-      navResidential: 'Residential',
+      navArchitecture: 'Architecture',
       navRemodeling: 'Remodeling',
       navPermits: 'Permits',
       navContact: 'Contact',
@@ -169,8 +101,8 @@
       heroSubtitle: 'Interior and residential design, remodeling, and permit management—delivered with clarity and care.',
       interiorTitle: 'Interior Design',
       interiorLead: 'Spaces that feel as good as they look—balanced, functional, and timeless.',
-      residentialTitle: 'Residential Design',
-      residentialLead: 'Thoughtful homes tailored to your lifestyle and context.',
+      architectureTitle: 'Architecture',
+      architectureLead: 'Thoughtful homes tailored to your lifestyle and context.',
       remodelingTitle: 'Remodeling',
       remodelingLead: 'Revitalizations that respect structure, budget, and time.',
       permitsTitle: 'Permit Management',
@@ -186,7 +118,7 @@
       brandName: 'Tu Estudio de Arquitectura',
       brandShort: 'Estudio de Arquitectura',
       navInterior: 'Interiores',
-      navResidential: 'Residencial',
+      navArchitecture: 'Arquitectura',
       navRemodeling: 'Remodelación',
       navPermits: 'Permisos',
       navContact: 'Contacto',
@@ -196,8 +128,8 @@
       heroSubtitle: 'Diseño de interiores y residencial, remodelación y gestión de permisos—con claridad y dedicación.',
       interiorTitle: 'Diseño de Interiores',
       interiorLead: 'Espacios que se sienten tan bien como se ven—equilibrados, funcionales y atemporales.',
-      residentialTitle: 'Diseño Residencial',
-      residentialLead: 'Hogares pensados para tu estilo de vida y contexto.',
+      architectureTitle: 'Arquitectura',
+      architectureLead: 'Hogares pensados para tu estilo de vida y contexto.',
       remodelingTitle: 'Remodelación',
       remodelingLead: 'Intervenciones que respetan la estructura, el presupuesto y el tiempo.',
       permitsTitle: 'Gestión de Permisos',
@@ -227,8 +159,9 @@
         fig.setAttribute('data-index', String(idx));
         const lang = document.documentElement.lang || 'en';
         const title = resolveText(proj.title, lang);
+        const preview = proj.preview_image || (proj.images && proj.images[0]) || './assets/placeholder.svg';
         fig.innerHTML = `
-          <img src="${(proj.images && proj.images[0]) || './assets/placeholder.svg'}" alt="${title}" />
+          <img src="${preview}" alt="${title}" />
           <figcaption>${title}</figcaption>
         `;
         fig.addEventListener('click', () => openProjectModal(section, idx));
