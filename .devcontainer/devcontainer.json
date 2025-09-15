@@ -1,0 +1,32 @@
+{
+  "name": "Architecture One-Page (Dev Container)",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.formatOnSave": true,
+        "files.autoSave": "onFocusChange"
+      },
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  },
+  "forwardPorts": [5173],
+  "postCreateCommand": "npm install",
+  "remoteUser": "node",
+  "portsAttributes": {
+    "5173": {
+      "label": "Dev Server",
+      "onAutoForward":"openBrowser"
+    }
+  },
+  "remoteEnv": {
+    "NODE_ENV": "development"
+  }
+}
