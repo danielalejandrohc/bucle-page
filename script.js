@@ -68,12 +68,11 @@
     ],
     permits: [
       {
-        title: 'Permit Package A-Z',
-        description: 'Complete permit management including drawings, submissions, and approvals.',
+        title: { en: 'Permits', es: 'Permisos constructivos' },
+        description: { en: 'Complete permit management including drawings, submissions, and approvals.', es: 'Gestión completa de permisos incluyendo dibujos, envíos y aprobaciones municipales constructivas.' },
         preview_image: './assets/permit/image.png',
         images: [
           './assets/permit/image.png',
-          './assets/placeholder.svg'
         ]
       }
     ]
