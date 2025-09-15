@@ -88,8 +88,8 @@
 
   const translations = {
     en: {
-      brandName: 'Your Architecture Studio',
-      brandShort: 'Architecture Studio',
+      brandName: 'Bucle Architecture',
+      brandShort: 'Bucle Architecture',
       navInterior: 'Interior',
       navArchitecture: 'Architecture',
       navRemodeling: 'Remodeling',
@@ -115,8 +115,8 @@
       viewProject: 'View project'
     },
     es: {
-      brandName: 'Tu Estudio de Arquitectura',
-      brandShort: 'Estudio de Arquitectura',
+      brandName: 'Bucle Arquitectura',
+      brandShort: 'Bucle Arquitectura',
       navInterior: 'Interiores',
       navArchitecture: 'Arquitectura',
       navRemodeling: 'Remodelación',
