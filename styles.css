@@ -118,3 +118,21 @@ img { max-width: 100%; display: block; }
   .modal { grid-template-columns: 1.15fr .85fr; }
   .modal-body { padding: 1.2rem 1.2rem 1.4rem; }
 }
+
+/* Zoom & Pan */
+.zoom-pan { 
+  width: 100%;
+  max-height: 70vh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  touch-action: none; /* enable custom touch gestures */
+}
+.zoom-pan img {
+  will-change: transform;
+  cursor: zoom-in;
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+}

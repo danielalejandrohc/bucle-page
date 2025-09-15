@@ -187,7 +187,9 @@
         <button class="modal-close" aria-label="Close" data-close>&times;</button>
         <div class="modal-media">
           <button class="nav prev" aria-label="Previous image" data-prev>‹</button>
-          <img id="modal-image" alt="Project image" />
+          <div class="zoom-pan" id="zoom-pan">
+            <img id="modal-image" alt="Project image" />
+          </div>
           <button class="nav next" aria-label="Next image" data-next>›</button>
         </div>
         <div class="modal-body">
@@ -208,6 +210,9 @@
       if (e.key === 'ArrowLeft') prevImage();
       if (e.key === 'ArrowRight') nextImage();
     });
+
+    // Initialize zoom/pan interactions once
+    initZoomPan();
     return wrap;
   }
 
@@ -222,6 +227,8 @@
     $('#modal-title', wrap).textContent = resolveText(data.title, lang);
     $('#modal-desc', wrap).textContent = resolveText(data.description, lang);
     updateModalImage();
+    // Reset zoom on open
+    resetZoom();
     wrap.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
   }
@@ -230,6 +237,7 @@
     const wrap = ensureModal();
     wrap.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    resetZoom();
   }
 
   function updateModalImage() {
@@ -237,7 +245,11 @@
     const images = projects[section]?.[index]?.images || [];
     const src = images[imgIndex] || './assets/placeholder.svg';
     const imgEl = $('#modal-image');
-    if (imgEl) imgEl.src = src;
+    if (imgEl) {
+      imgEl.src = src;
+      // Reset zoom after image loads to ensure proper sizing
+      imgEl.onload = () => resetZoom();
+    }
   }
 
   function nextImage() {
@@ -327,4 +339,187 @@
     initSocial();
     renderProjects();
   });
+})();
+
+// ---- Zoom & Pan for modal image ----
+(function() {
+  const doc = document;
+  let state = { scale: 1, x: 0, y: 0, min: 1, max: 5, base: 1 };
+  let isPanning = false;
+  let start = { x: 0, y: 0 };
+
+  function getEls() {
+    const container = doc.getElementById('zoom-pan');
+    const img = doc.getElementById('modal-image');
+    return { container, img };
+  }
+
+  function applyTransform() {
+    const { img } = getEls();
+    if (!img) return;
+    img.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+    img.style.transformOrigin = '0 0';
+    img.style.cursor = state.scale > 1 ? (isPanning ? 'grabbing' : 'grab') : 'zoom-in';
+  }
+
+  function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+  function pointToContainer(evt, container) {
+    const r = container.getBoundingClientRect();
+    const x = (evt.clientX ?? (evt.touches && evt.touches[0]?.clientX) ?? 0) - r.left;
+    const y = (evt.clientY ?? (evt.touches && evt.touches[0]?.clientY) ?? 0) - r.top;
+    return { x, y };
+  }
+
+  function zoomAt(container, point, nextScale) {
+    const prevScale = state.scale;
+    nextScale = clamp(nextScale, state.min, state.max);
+    if (nextScale === prevScale) return;
+    // Keep the point under the cursor stationary while zooming
+    const dx = point.x - state.x;
+    const dy = point.y - state.y;
+    const k = nextScale / prevScale;
+    state.x = point.x - dx * k;
+    state.y = point.y - dy * k;
+    state.scale = nextScale;
+    applyTransform();
+  }
+
+  function wheelHandler(e) {
+    const { container } = getEls();
+    if (!container) return;
+    if (e.ctrlKey) return; // let browser zoom with ctrl+wheel
+    e.preventDefault();
+    const delta = -e.deltaY; // up to zoom in
+    const factor = delta > 0 ? 1.1 : 0.9;
+    const targetScale = clamp(state.scale * factor, state.min, state.max);
+    const p = pointToContainer(e, container);
+    zoomAt(container, p, targetScale);
+  }
+
+  function downHandler(e) {
+    const { container } = getEls();
+    if (!container) return;
+    if (state.scale <= 1) return;
+    isPanning = true;
+    const p = pointToContainer(e, container);
+    start.x = p.x - state.x;
+    start.y = p.y - state.y;
+    applyTransform();
+  }
+
+  function moveHandler(e) {
+    if (!isPanning) return;
+    const { container } = getEls();
+    if (!container) return;
+    e.preventDefault();
+    const p = pointToContainer(e, container);
+    state.x = p.x - start.x;
+    state.y = p.y - start.y;
+    applyTransform();
+  }
+
+  function upHandler() { if (!isPanning) return; isPanning = false; applyTransform(); }
+
+  // Touch pinch
+  let pinch = { active: false, dist: 0, cx: 0, cy: 0, startScale: 1 };
+  function touchStart(e) {
+    if (e.touches.length === 2) {
+      pinch.active = true;
+      const [a, b] = e.touches;
+      pinch.dist = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+      pinch.cx = (a.clientX + b.clientX) / 2;
+      pinch.cy = (a.clientY + b.clientY) / 2;
+      pinch.startScale = state.scale;
+    } else if (e.touches.length === 1 && state.scale > 1) {
+      downHandler(e);
+    }
+  }
+  function touchMove(e) {
+    const { container } = getEls();
+    if (!container) return;
+    if (pinch.active && e.touches.length === 2) {
+      e.preventDefault();
+      const [a, b] = e.touches;
+      const nd = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+      const factor = nd / pinch.dist;
+      const target = clamp(pinch.startScale * factor, state.min, state.max);
+      zoomAt(container, { x: pinch.cx - container.getBoundingClientRect().left, y: pinch.cy - container.getBoundingClientRect().top }, target);
+    } else if (e.touches.length === 1 && isPanning) {
+      moveHandler(e);
+    }
+  }
+  function touchEnd(e) {
+    if (pinch.active && e.touches.length < 2) pinch.active = false;
+    if (isPanning && e.touches.length === 0) upHandler();
+  }
+
+  function dblClickHandler() { resetZoom(); }
+
+  function bind() {
+    const { container, img } = getEls();
+    if (!container || !img) return;
+    container.addEventListener('wheel', wheelHandler, { passive: false });
+    container.addEventListener('mousedown', downHandler);
+    doc.addEventListener('mousemove', moveHandler);
+    doc.addEventListener('mouseup', upHandler);
+    container.addEventListener('touchstart', touchStart, { passive: false });
+    container.addEventListener('touchmove', touchMove, { passive: false });
+    container.addEventListener('touchend', touchEnd);
+    container.addEventListener('dblclick', dblClickHandler);
+  }
+
+  function unbind() {
+    const { container } = getEls();
+    if (!container) return;
+    container.removeEventListener('wheel', wheelHandler);
+    container.removeEventListener('mousedown', downHandler);
+    doc.removeEventListener('mousemove', moveHandler);
+    doc.removeEventListener('mouseup', upHandler);
+    container.removeEventListener('touchstart', touchStart);
+    container.removeEventListener('touchmove', touchMove);
+    container.removeEventListener('touchend', touchEnd);
+    container.removeEventListener('dblclick', dblClickHandler);
+  }
+
+  function initZoomPan() { bind(); resetZoom(); }
+
+  function centerImage() {
+    const { container, img } = getEls();
+    if (!container || !img) return;
+    const cr = container.getBoundingClientRect();
+    const iw = img.naturalWidth || img.width;
+    const ih = img.naturalHeight || img.height;
+    const displayW = iw * state.scale;
+    const displayH = ih * state.scale;
+    state.x = (cr.width - displayW) / 2;
+    state.y = (cr.height - displayH) / 2;
+  }
+
+  function resetZoom() {
+    const { container, img } = getEls();
+    isPanning = false; pinch.active = false;
+    if (!container || !img) return;
+    // Compute base scale to fit inside container using natural dimensions
+    const cw = container.clientWidth;
+    const ch = container.clientHeight;
+    const iw = img.naturalWidth || img.width;
+    const ih = img.naturalHeight || img.height;
+    if (!iw || !ih || !cw || !ch) {
+      // defer until next frame if sizes not ready
+      requestAnimationFrame(resetZoom);
+      return;
+    }
+    const base = Math.min(cw / iw, ch / ih, 1); // never upscale as base
+    state.base = base;
+    state.min = base;
+    state.max = Math.max(base * 5, 2); // allow at least 2x even if base is tiny
+    state.scale = base;
+    // center after a tick to ensure layout is updated
+    requestAnimationFrame(() => { centerImage(); applyTransform(); });
+  }
+
+  // Expose to outer IIFE scope
+  window.resetZoom = resetZoom;
+  window.initZoomPan = initZoomPan;
 })();
