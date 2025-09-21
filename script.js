@@ -160,7 +160,7 @@
         const title = resolveText(proj.title, lang);
         const preview = proj.preview_image || (proj.images && proj.images[0]) || './assets/placeholder.svg';
         fig.innerHTML = `
-          <img src="${preview}" alt="${title}" />
+          <img src="${preview}" alt="${title}" loading="lazy" decoding="async" fetchpriority="low" />
           <figcaption>${title}</figcaption>
         `;
         fig.addEventListener('click', () => openProjectModal(section, idx));
@@ -237,6 +237,12 @@
     wrap.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     resetZoom();
+    // Clear image src to free memory and avoid background loading
+    const imgEl = $('#modal-image', wrap);
+    if (imgEl) {
+      imgEl.removeAttribute('fetchpriority');
+      imgEl.src = '';
+    }
   }
 
   function updateModalImage() {
@@ -245,6 +251,8 @@
     const src = images[imgIndex] || './assets/placeholder.svg';
     const imgEl = $('#modal-image');
     if (imgEl) {
+      // elevate current image priority and set src only when needed
+      imgEl.setAttribute('fetchpriority', 'high');
       imgEl.src = src;
       // Reset zoom after image loads to ensure proper sizing
       imgEl.onload = () => resetZoom();
