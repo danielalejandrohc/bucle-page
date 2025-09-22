@@ -336,8 +336,8 @@
   function initSocial() {
     const ig = $('#instagram-link');
     const fb = $('#facebook-link');
-    // Example: ig.href = 'https://instagram.com/your_handle';
-    // Example: fb.href = 'https://facebook.com/your_page';
+    if (ig) ig.href = 'https://www.instagram.com/bucle.studio__/';
+    // Facebook is currently commented out in HTML; leave unset.
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -354,6 +354,8 @@
   let state = { scale: 1, x: 0, y: 0, min: 1, max: 5, base: 1 };
   let isPanning = false;
   let start = { x: 0, y: 0 };
+  // Simple swipe detection for navigation when not zoomed
+  let swipe = { active: false, x: 0, y: 0, t: 0 };
 
   function getEls() {
     const container = doc.getElementById('zoom-pan');
@@ -438,8 +440,16 @@
       pinch.cx = (a.clientX + b.clientX) / 2;
       pinch.cy = (a.clientY + b.clientY) / 2;
       pinch.startScale = state.scale;
-    } else if (e.touches.length === 1 && state.scale > 1) {
-      downHandler(e);
+    } else if (e.touches.length === 1) {
+      if (state.scale > 1) {
+        downHandler(e);
+      } else {
+        // prepare for swipe navigation when not zoomed
+        swipe.active = true;
+        swipe.x = e.touches[0].clientX;
+        swipe.y = e.touches[0].clientY;
+        swipe.t = Date.now();
+      }
     }
   }
   function touchMove(e) {
@@ -459,6 +469,25 @@
   function touchEnd(e) {
     if (pinch.active && e.touches.length < 2) pinch.active = false;
     if (isPanning && e.touches.length === 0) upHandler();
+    // Handle swipe-to-navigate if we were not zoomed and a single-finger gesture ended
+    if (swipe.active && !isPanning && !pinch.active) {
+      const dt = Date.now() - swipe.t;
+      const endX = (e.changedTouches && e.changedTouches[0]?.clientX) || swipe.x;
+      const endY = (e.changedTouches && e.changedTouches[0]?.clientY) || swipe.y;
+      const dx = endX - swipe.x;
+      const dy = endY - swipe.y;
+      const horiz = Math.abs(dx) > Math.abs(dy);
+      const threshold = 40; // px
+      const timeLimit = 800; // ms
+      if (dt <= timeLimit && horiz && Math.abs(dx) > threshold) {
+        if (dx < 0) {
+          document.querySelector('[data-next]')?.dispatchEvent(new Event('click', { bubbles: true }));
+        } else {
+          document.querySelector('[data-prev]')?.dispatchEvent(new Event('click', { bubbles: true }));
+        }
+      }
+      swipe.active = false;
+    }
   }
 
   function dblClickHandler() { resetZoom(); }
