@@ -78,6 +78,83 @@
     ]
   };
 
+  // Full-screen scrollable overlay showing all images stacked
+  function openProjectScrollOverlay(section, idx) {
+    const data = projects[section]?.[idx];
+    if (!data) return;
+    const lang = document.documentElement.lang || 'en';
+    const title = resolveText(data.title, lang);
+    const desc = resolveText(data.description, lang);
+
+    // Create overlay if not exists
+    let overlay = document.getElementById('project-scroll-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'project-scroll-overlay';
+      overlay.innerHTML = `
+        <div class="po-backdrop" data-close></div>
+        <div class="po-panel" role="dialog" aria-modal="true" aria-labelledby="po-title">
+          <button class="po-close" aria-label="Close" data-close>&times;</button>
+          <div class="po-content">
+            <header class="po-header">
+              <h3 id="po-title"></h3>
+              <p id="po-desc"></p>
+            </header>
+            <div class="po-images" id="po-images"></div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', (e) => {
+        if (e.target.matches('[data-close]')) closeProjectScrollOverlay();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (overlay.style.display !== 'none' && e.key === 'Escape') closeProjectScrollOverlay();
+      });
+    }
+
+    overlay.querySelector('#po-title').textContent = title;
+    overlay.querySelector('#po-desc').textContent = desc;
+
+    const list = overlay.querySelector('#po-images');
+    list.innerHTML = '';
+    const imgs = (data.images || []).slice();
+    imgs.forEach((src, i) => {
+      const fig = document.createElement('figure');
+      fig.className = 'po-figure';
+      fig.innerHTML = `
+        <img data-src="${src}" alt="${title} ${i+1}" loading="lazy" decoding="async" />
+      `;
+      list.appendChild(fig);
+    });
+
+    // Lazy load via IntersectionObserver
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          const ds = img.getAttribute('data-src');
+          if (ds) {
+            img.src = ds;
+            img.removeAttribute('data-src');
+          }
+          obs.unobserve(img);
+        }
+      });
+    }, { root: overlay.querySelector('.po-content'), rootMargin: '200px 0px', threshold: 0.01 });
+    list.querySelectorAll('img[data-src]').forEach(img => io.observe(img));
+
+    overlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeProjectScrollOverlay() {
+    const overlay = document.getElementById('project-scroll-overlay');
+    if (!overlay) return;
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
   // Helper to resolve multilingual fields (string or object keyed by lang)
   function resolveText(value, lang) {
     if (typeof value === 'string') return value;
@@ -151,192 +228,173 @@
       const section = grid.getAttribute('data-section');
       const items = projects[section] || [];
       grid.innerHTML = '';
+      // Reentrancy guard to avoid double-open from touchend+click on mobile
+      let opening = false;
+      const safeOpen = (section, idx, startAt = 0) => {
+        if (opening) return;
+        opening = true;
+        setTimeout(() => { opening = false; }, 700);
+        openFancybox(section, idx, startAt);
+      };
+
       items.forEach((proj, idx) => {
         const fig = document.createElement('figure');
         fig.className = 'card project-card';
         fig.setAttribute('data-section', section);
         fig.setAttribute('data-index', String(idx));
+        fig.setAttribute('role', 'button');
+        fig.setAttribute('tabindex', '0');
+        fig.setAttribute('aria-label', 'View project');
+        fig.style.cursor = 'pointer';
         const lang = document.documentElement.lang || 'en';
         const title = resolveText(proj.title, lang);
+        const desc = resolveText(proj.description, lang);
         const preview = proj.preview_image || (proj.images && proj.images[0]) || './assets/placeholder.svg';
+        const totalImages = (proj.images || []).length;
+        const thumbs = (proj.images || []).slice(0, 5);
         fig.innerHTML = `
           <img src="${preview}" alt="${title}" loading="lazy" decoding="async" fetchpriority="low"
                sizes="(min-width: 940px) 25vw, (min-width: 640px) 50vw, 100vw" />
           <figcaption>${title}</figcaption>
+          <div class="thumb-strip">
+            ${thumbs.map((src, i) => {
+              const isLast = i === thumbs.length - 1;
+              const extra = Math.max(0, totalImages - thumbs.length);
+              const badge = (isLast && extra > 0) ? `<span class=\"more-badge\">+${extra}</span>` : '';
+              const moreClass = (isLast && extra > 0) ? ' more' : '';
+              return `<button type=\"button\" class=\"thumb${moreClass}\" data-thumb-index=\"${i}\" aria-label=\"${lang==='es'?'Ver foto':'View photo'} ${i+1}\"><img src=\"${src}\" alt=\"\" loading=\"lazy\" decoding=\"async\" />${badge}</button>`;
+            }).join('')}
+          </div>
+          <div class="card-actions">
+            <button type="button" class="chip read-more">${lang === 'es' ? 'Leer más' : 'Read more'}</button>
+          </div>
         `;
-        fig.addEventListener('click', () => openPhotoSwipe(section, idx));
+        fig.addEventListener('click', () => safeOpen(section, idx));
+        // Ensure activation on keyboard and touch (Android WebView quirks)
+        fig.addEventListener('keydown', (e) => {
+          // Activate only when focus is on the figure or non-interactive child
+          const isInteractive = e.target.closest('.thumb-strip, .chip, button, a, input, textarea, select');
+          if ((e.key === 'Enter' || e.key === ' ') && !isInteractive) {
+            e.preventDefault();
+            safeOpen(section, idx, 0);
+          }
+        });
+        // Thumbnail clicks open the gallery at corresponding index
+        fig.querySelectorAll('.thumb').forEach(btn => {
+          btn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            const startAt = parseInt(btn.getAttribute('data-thumb-index') || '0', 10) || 0;
+            safeOpen(section, idx, startAt);
+          });
+        });
+        // Read more opens description dialog
+        const readMore = fig.querySelector('.chip.read-more');
+        readMore?.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          openProjectInfo(section, idx);
+        });
+        fig.addEventListener('touchend', (e) => {
+          // If click is not fired, use touchend as a fallback
+          // Avoid double-trigger if click will follow
+          if (e.cancelable) e.preventDefault();
+          // Ignore if touch on thumb strip or read-more chip
+          if (!e.target.closest('.thumb-strip') && !e.target.closest('.chip')) {
+            safeOpen(section, idx, 0);
+          }
+        }, { passive: false });
         grid.appendChild(fig);
       });
     });
   }
 
-  let modalState = {
-    section: null,
-    index: 0,
-    imgIndex: 0
-  };
+  // (Removed legacy modal implementation)
 
-  function ensureModal() {
-    if ($('#project-modal')) return $('#project-modal');
-    const wrap = document.createElement('div');
-    wrap.id = 'project-modal';
-    wrap.setAttribute('aria-hidden', 'true');
-    wrap.innerHTML = `
-      <div class="modal-overlay" data-close></div>
-      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <button class="modal-close" aria-label="Close" data-close>&times;</button>
-        <div class="modal-media">
-          <button class="nav prev" aria-label="Previous image" data-prev>‹</button>
-          <div class="zoom-pan" id="zoom-pan">
-            <img id="modal-image" alt="Project image" />
-          </div>
-          <button class="nav next" aria-label="Next image" data-next>›</button>
-        </div>
-        <div class="modal-body">
-          <h3 id="modal-title"></h3>
-          <p id="modal-desc"></p>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(wrap);
-    wrap.addEventListener('click', (e) => {
-      if (e.target.matches('[data-close]')) closeProjectModal();
-    });
-    wrap.querySelector('[data-prev]')?.addEventListener('click', prevImage);
-    wrap.querySelector('[data-next]')?.addEventListener('click', nextImage);
-    document.addEventListener('keydown', (e) => {
-      if (wrap.getAttribute('aria-hidden') === 'true') return;
-      if (e.key === 'Escape') closeProjectModal();
-      if (e.key === 'ArrowLeft') prevImage();
-      if (e.key === 'ArrowRight') nextImage();
-    });
-
-    // Initialize zoom/pan interactions once
-    initZoomPan();
-    return wrap;
-  }
-
-  function openProjectModal(section, idx) {
+  // Fancybox integration (marketplace-like gallery)
+  function openFancybox(section, idx, startAt = 0) {
     const data = projects[section]?.[idx];
     if (!data) return;
-    modalState.section = section;
-    modalState.index = idx;
-    modalState.imgIndex = 0;
-    const wrap = ensureModal();
-    const lang = document.documentElement.lang || 'en';
-    $('#modal-title', wrap).textContent = resolveText(data.title, lang);
-    $('#modal-desc', wrap).textContent = resolveText(data.description, lang);
-    updateModalImage();
-    // Reset zoom on open
-    resetZoom();
-    wrap.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-  }
-
-  // PhotoSwipe integration
-  let pswpLightbox = null;
-  async function openPhotoSwipe(section, idx) {
-    const data = projects[section]?.[idx];
-    if (!data) return;
-    if (!window.PhotoSwipeLightbox || !window.PhotoSwipe) {
-      console.error('PhotoSwipe scripts not loaded');
+    if (!window.Fancybox || typeof window.Fancybox.show !== 'function') {
+      console.warn('Fancybox not available');
       return;
     }
     const lang = document.documentElement.lang || 'en';
     const title = resolveText(data.title, lang);
     const desc = resolveText(data.description, lang);
-
     const images = (data.images || []).slice();
-    // Use sensible defaults to open instantly; PhotoSwipe will load images on demand
-    const DEFAULT_W = 1600;
-    const DEFAULT_H = 1067;
     const items = images.map((src) => ({
       src,
-      width: DEFAULT_W,
-      height: DEFAULT_H,
-      alt: title,
-      // Keep caption concise to avoid overlay clutter on small screens
-      caption: title
+      type: 'image',
+      caption: ''
     }));
 
-    // Instantiate and open PhotoSwipe
-    // Clean up any previous instance
-    if (pswpLightbox) {
-      try { pswpLightbox.destroy(); } catch {}
-      pswpLightbox = null;
-    }
     const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    pswpLightbox = new window.PhotoSwipeLightbox({
-      dataSource: items,
-      // For UMD build, provide a loader function that resolves to the core module
-      pswpModule: () => Promise.resolve(window.PhotoSwipe),
-      showHideAnimationType: prefersReducedMotion ? 'none' : 'zoom',
-      wheelToZoom: true,
-      clickToCloseNonZoomable: true,
-      bgOpacity: 0.95,
-      loop: true,
-      preload: [2,2],
-      paddingFn: (viewportSize) => {
-        // Generous padding on large screens; tighter on mobile
-        const base = viewportSize.x > 1024 ? 32 : 16;
-        return { top: base, bottom: base, left: base, right: base };
-      }
-    });
-    console.debug('Opening PhotoSwipe with', items.length, 'items');
-    pswpLightbox.init();
-    // Open at first slide (or change to desired index)
     try {
-      pswpLightbox.loadAndOpen(0);
+      window.Fancybox.show(items, {
+        animated: !prefersReducedMotion,
+        hideScrollbar: true,
+        dragToClose: true,
+        infinite: true,
+        Thumbs: { autoStart: false },
+        Toolbar: {
+          display: {
+            left: [],
+            middle: [],
+            right: ['close']
+          }
+        },
+        Images: { zoom: true, preload: 2 },
+        Carousel: { transition: 'fade', initialPage: startAt }
+      });
     } catch (e) {
-      console.error('Failed to open PhotoSwipe', e);
+      console.error('Failed to open Fancybox', e);
     }
-    pswpLightbox.on('close', () => {
-      try { pswpLightbox.destroy(); } catch {}
-      pswpLightbox = null;
-    });
   }
 
-  function closeProjectModal() {
-    const wrap = ensureModal();
-    wrap.setAttribute('aria-hidden', 'true');
+  // Project Description Dialog
+  function ensureInfoDialog() {
+    let dlg = document.getElementById('project-info-dialog');
+    if (dlg) return dlg;
+    dlg = document.createElement('div');
+    dlg.id = 'project-info-dialog';
+    dlg.innerHTML = `
+      <div class="info-backdrop" data-close></div>
+      <div class="info-panel" role="dialog" aria-modal="true" aria-labelledby="info-title">
+        <button class="info-close" aria-label="Close" data-close>&times;</button>
+        <div class="info-body">
+          <h3 id="info-title"></h3>
+          <p id="info-desc"></p>
+          <div class="info-actions">
+            <button type="button" id="info-view-photos" class="btn primary">View photos</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(dlg);
+    dlg.addEventListener('click', (e) => { if (e.target.matches('[data-close]')) closeProjectInfo(); });
+    document.addEventListener('keydown', (e) => { if (dlg.style.display !== 'none' && e.key === 'Escape') closeProjectInfo(); });
+    return dlg;
+  }
+
+  function openProjectInfo(section, idx) {
+    const dlg = ensureInfoDialog();
+    const data = projects[section]?.[idx];
+    if (!data) return;
+    const lang = document.documentElement.lang || 'en';
+    const title = resolveText(data.title, lang);
+    const desc = resolveText(data.description, lang);
+    dlg.querySelector('#info-title').textContent = title;
+    dlg.querySelector('#info-desc').textContent = desc;
+    const btn = dlg.querySelector('#info-view-photos');
+    btn.textContent = lang === 'es' ? 'Ver fotos' : 'View photos';
+    btn.onclick = () => { closeProjectInfo(); openFancybox(section, idx, 0); };
+    dlg.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeProjectInfo() {
+    const dlg = document.getElementById('project-info-dialog');
+    if (!dlg) return;
+    dlg.style.display = 'none';
     document.body.style.overflow = '';
-    resetZoom();
-    // Clear image src to free memory and avoid background loading
-    const imgEl = $('#modal-image', wrap);
-    if (imgEl) {
-      imgEl.removeAttribute('fetchpriority');
-      imgEl.src = '';
-    }
-  }
-
-  function updateModalImage() {
-    const { section, index, imgIndex } = modalState;
-    const images = projects[section]?.[index]?.images || [];
-    const src = images[imgIndex] || './assets/placeholder.svg';
-    const imgEl = $('#modal-image');
-    if (imgEl) {
-      // elevate current image priority and set src only when needed
-      imgEl.setAttribute('fetchpriority', 'high');
-      imgEl.src = src;
-      // Reset zoom after image loads to ensure proper sizing
-      imgEl.onload = () => resetZoom();
-    }
-  }
-
-  function nextImage() {
-    const { section, index } = modalState;
-    const images = projects[section]?.[index]?.images || [];
-    if (!images.length) return;
-    modalState.imgIndex = (modalState.imgIndex + 1) % images.length;
-    updateModalImage();
-  }
-
-  function prevImage() {
-    const { section, index } = modalState;
-    const images = projects[section]?.[index]?.images || [];
-    if (!images.length) return;
-    modalState.imgIndex = (modalState.imgIndex - 1 + images.length) % images.length;
-    updateModalImage();
   }
 
   function setLanguage(lang) {
@@ -410,216 +468,4 @@
     initSocial();
     renderProjects();
   });
-})();
-
-// ---- Zoom & Pan for modal image ----
-(function() {
-  const doc = document;
-  let state = { scale: 1, x: 0, y: 0, min: 1, max: 5, base: 1 };
-  let isPanning = false;
-  let start = { x: 0, y: 0 };
-  // Simple swipe detection for navigation when not zoomed
-  let swipe = { active: false, x: 0, y: 0, t: 0 };
-
-  function getEls() {
-    const container = doc.getElementById('zoom-pan');
-    const img = doc.getElementById('modal-image');
-    return { container, img };
-  }
-
-  function applyTransform() {
-    const { img } = getEls();
-    if (!img) return;
-    img.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
-    img.style.transformOrigin = '0 0';
-    img.style.cursor = state.scale > 1 ? (isPanning ? 'grabbing' : 'grab') : 'zoom-in';
-  }
-
-  function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
-
-  function pointToContainer(evt, container) {
-    const r = container.getBoundingClientRect();
-    const x = (evt.clientX ?? (evt.touches && evt.touches[0]?.clientX) ?? 0) - r.left;
-    const y = (evt.clientY ?? (evt.touches && evt.touches[0]?.clientY) ?? 0) - r.top;
-    return { x, y };
-  }
-
-  function zoomAt(container, point, nextScale) {
-    const prevScale = state.scale;
-    nextScale = clamp(nextScale, state.min, state.max);
-    if (nextScale === prevScale) return;
-    // Keep the point under the cursor stationary while zooming
-    const dx = point.x - state.x;
-    const dy = point.y - state.y;
-    const k = nextScale / prevScale;
-    state.x = point.x - dx * k;
-    state.y = point.y - dy * k;
-    state.scale = nextScale;
-    applyTransform();
-  }
-
-  function wheelHandler(e) {
-    const { container } = getEls();
-    if (!container) return;
-    if (e.ctrlKey) return; // let browser zoom with ctrl+wheel
-    e.preventDefault();
-    const delta = -e.deltaY; // up to zoom in
-    const factor = delta > 0 ? 1.1 : 0.9;
-    const targetScale = clamp(state.scale * factor, state.min, state.max);
-    const p = pointToContainer(e, container);
-    zoomAt(container, p, targetScale);
-  }
-
-  function downHandler(e) {
-    const { container } = getEls();
-    if (!container) return;
-    if (state.scale <= 1) return;
-    isPanning = true;
-    const p = pointToContainer(e, container);
-    start.x = p.x - state.x;
-    start.y = p.y - state.y;
-    applyTransform();
-  }
-
-  function moveHandler(e) {
-    if (!isPanning) return;
-    const { container } = getEls();
-    if (!container) return;
-    e.preventDefault();
-    const p = pointToContainer(e, container);
-    state.x = p.x - start.x;
-    state.y = p.y - start.y;
-    applyTransform();
-  }
-
-  function upHandler() { if (!isPanning) return; isPanning = false; applyTransform(); }
-
-  // Touch pinch
-  let pinch = { active: false, dist: 0, cx: 0, cy: 0, startScale: 1 };
-  function touchStart(e) {
-    if (e.touches.length === 2) {
-      pinch.active = true;
-      const [a, b] = e.touches;
-      pinch.dist = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
-      pinch.cx = (a.clientX + b.clientX) / 2;
-      pinch.cy = (a.clientY + b.clientY) / 2;
-      pinch.startScale = state.scale;
-    } else if (e.touches.length === 1) {
-      if (state.scale > 1) {
-        downHandler(e);
-      } else {
-        // prepare for swipe navigation when not zoomed
-        swipe.active = true;
-        swipe.x = e.touches[0].clientX;
-        swipe.y = e.touches[0].clientY;
-        swipe.t = Date.now();
-      }
-    }
-  }
-  function touchMove(e) {
-    const { container } = getEls();
-    if (!container) return;
-    if (pinch.active && e.touches.length === 2) {
-      e.preventDefault();
-      const [a, b] = e.touches;
-      const nd = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
-      const factor = nd / pinch.dist;
-      const target = clamp(pinch.startScale * factor, state.min, state.max);
-      zoomAt(container, { x: pinch.cx - container.getBoundingClientRect().left, y: pinch.cy - container.getBoundingClientRect().top }, target);
-    } else if (e.touches.length === 1 && isPanning) {
-      moveHandler(e);
-    }
-  }
-  function touchEnd(e) {
-    if (pinch.active && e.touches.length < 2) pinch.active = false;
-    if (isPanning && e.touches.length === 0) upHandler();
-    // Handle swipe-to-navigate if we were not zoomed and a single-finger gesture ended
-    if (swipe.active && !isPanning && !pinch.active) {
-      const dt = Date.now() - swipe.t;
-      const endX = (e.changedTouches && e.changedTouches[0]?.clientX) || swipe.x;
-      const endY = (e.changedTouches && e.changedTouches[0]?.clientY) || swipe.y;
-      const dx = endX - swipe.x;
-      const dy = endY - swipe.y;
-      const horiz = Math.abs(dx) > Math.abs(dy);
-      const threshold = 40; // px
-      const timeLimit = 800; // ms
-      if (dt <= timeLimit && horiz && Math.abs(dx) > threshold) {
-        if (dx < 0) {
-          document.querySelector('[data-next]')?.dispatchEvent(new Event('click', { bubbles: true }));
-        } else {
-          document.querySelector('[data-prev]')?.dispatchEvent(new Event('click', { bubbles: true }));
-        }
-      }
-      swipe.active = false;
-    }
-  }
-
-  function dblClickHandler() { resetZoom(); }
-
-  function bind() {
-    const { container, img } = getEls();
-    if (!container || !img) return;
-    container.addEventListener('wheel', wheelHandler, { passive: false });
-    container.addEventListener('mousedown', downHandler);
-    doc.addEventListener('mousemove', moveHandler);
-    doc.addEventListener('mouseup', upHandler);
-    container.addEventListener('touchstart', touchStart, { passive: false });
-    container.addEventListener('touchmove', touchMove, { passive: false });
-    container.addEventListener('touchend', touchEnd);
-    container.addEventListener('dblclick', dblClickHandler);
-  }
-
-  function unbind() {
-    const { container } = getEls();
-    if (!container) return;
-    container.removeEventListener('wheel', wheelHandler);
-    container.removeEventListener('mousedown', downHandler);
-    doc.removeEventListener('mousemove', moveHandler);
-    doc.removeEventListener('mouseup', upHandler);
-    container.removeEventListener('touchstart', touchStart);
-    container.removeEventListener('touchmove', touchMove);
-    container.removeEventListener('touchend', touchEnd);
-    container.removeEventListener('dblclick', dblClickHandler);
-  }
-
-  function initZoomPan() { bind(); resetZoom(); }
-
-  function centerImage() {
-    const { container, img } = getEls();
-    if (!container || !img) return;
-    const cr = container.getBoundingClientRect();
-    const iw = img.naturalWidth || img.width;
-    const ih = img.naturalHeight || img.height;
-    const displayW = iw * state.scale;
-    const displayH = ih * state.scale;
-    state.x = (cr.width - displayW) / 2;
-    state.y = (cr.height - displayH) / 2;
-  }
-
-  function resetZoom() {
-    const { container, img } = getEls();
-    isPanning = false; pinch.active = false;
-    if (!container || !img) return;
-    // Compute base scale to fit inside container using natural dimensions
-    const cw = container.clientWidth;
-    const ch = container.clientHeight;
-    const iw = img.naturalWidth || img.width;
-    const ih = img.naturalHeight || img.height;
-    if (!iw || !ih || !cw || !ch) {
-      // defer until next frame if sizes not ready
-      requestAnimationFrame(resetZoom);
-      return;
-    }
-    const base = Math.min(cw / iw, ch / ih, 1); // never upscale as base
-    state.base = base;
-    state.min = base;
-    state.max = Math.max(base * 5, 2); // allow at least 2x even if base is tiny
-    state.scale = base;
-    // center after a tick to ensure layout is updated
-    requestAnimationFrame(() => { centerImage(); applyTransform(); });
-  }
-
-  // Expose to outer IIFE scope
-  window.resetZoom = resetZoom;
-  window.initZoomPan = initZoomPan;
 })();
