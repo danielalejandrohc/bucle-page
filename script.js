@@ -273,7 +273,26 @@
             <button type="button" class="chip read-more">${lang === 'es' ? 'Leer más' : 'Read more'}</button>
           </div>`}
         `;
-        fig.addEventListener('click', () => safeOpen(section, idx));
+        // Guard against opening after a scroll gesture
+        let drag = { down: false, moved: false, x: 0, y: 0 };
+        const DRAG_THRESHOLD = 10; // px
+        fig.addEventListener('pointerdown', (e) => {
+          drag.down = true; drag.moved = false; drag.x = e.clientX; drag.y = e.clientY;
+        });
+        fig.addEventListener('pointermove', (e) => {
+          if (!drag.down) return;
+          const dx = e.clientX - drag.x; const dy = e.clientY - drag.y;
+          if (Math.hypot(dx, dy) > DRAG_THRESHOLD) drag.moved = true;
+        });
+        const clearDrag = () => { drag.down = false; };
+        fig.addEventListener('pointerup', clearDrag);
+        fig.addEventListener('pointercancel', clearDrag);
+        fig.addEventListener('click', (e) => {
+          // Ignore if user was scrolling/draggng or clicked an interactive child
+          if (drag.moved) return;
+          if (e.target.closest('.thumb-strip, .chip, button, a')) return;
+          safeOpen(section, idx, 0);
+        });
         // Ensure activation on keyboard and touch (Android WebView quirks)
         fig.addEventListener('keydown', (e) => {
           // Activate only when focus is on the figure or non-interactive child
