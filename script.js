@@ -160,10 +160,11 @@
         const title = resolveText(proj.title, lang);
         const preview = proj.preview_image || (proj.images && proj.images[0]) || './assets/placeholder.svg';
         fig.innerHTML = `
-          <img src="${preview}" alt="${title}" loading="lazy" decoding="async" fetchpriority="low" />
+          <img src="${preview}" alt="${title}" loading="lazy" decoding="async" fetchpriority="low"
+               sizes="(min-width: 940px) 25vw, (min-width: 640px) 50vw, 100vw" />
           <figcaption>${title}</figcaption>
         `;
-        fig.addEventListener('click', () => openProjectModal(section, idx));
+        fig.addEventListener('click', () => openPhotoSwipe(section, idx));
         grid.appendChild(fig);
       });
     });
@@ -230,6 +231,69 @@
     resetZoom();
     wrap.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+  }
+
+  // PhotoSwipe integration
+  let pswpLightbox = null;
+  async function openPhotoSwipe(section, idx) {
+    const data = projects[section]?.[idx];
+    if (!data) return;
+    if (!window.PhotoSwipeLightbox || !window.PhotoSwipe) {
+      console.error('PhotoSwipe scripts not loaded');
+      return;
+    }
+    const lang = document.documentElement.lang || 'en';
+    const title = resolveText(data.title, lang);
+    const desc = resolveText(data.description, lang);
+
+    const images = (data.images || []).slice();
+    // Use sensible defaults to open instantly; PhotoSwipe will load images on demand
+    const DEFAULT_W = 1600;
+    const DEFAULT_H = 1067;
+    const items = images.map((src) => ({
+      src,
+      width: DEFAULT_W,
+      height: DEFAULT_H,
+      alt: title,
+      // Keep caption concise to avoid overlay clutter on small screens
+      caption: title
+    }));
+
+    // Instantiate and open PhotoSwipe
+    // Clean up any previous instance
+    if (pswpLightbox) {
+      try { pswpLightbox.destroy(); } catch {}
+      pswpLightbox = null;
+    }
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    pswpLightbox = new window.PhotoSwipeLightbox({
+      dataSource: items,
+      // For UMD build, provide a loader function that resolves to the core module
+      pswpModule: () => Promise.resolve(window.PhotoSwipe),
+      showHideAnimationType: prefersReducedMotion ? 'none' : 'zoom',
+      wheelToZoom: true,
+      clickToCloseNonZoomable: true,
+      bgOpacity: 0.95,
+      loop: true,
+      preload: [2,2],
+      paddingFn: (viewportSize) => {
+        // Generous padding on large screens; tighter on mobile
+        const base = viewportSize.x > 1024 ? 32 : 16;
+        return { top: base, bottom: base, left: base, right: base };
+      }
+    });
+    console.debug('Opening PhotoSwipe with', items.length, 'items');
+    pswpLightbox.init();
+    // Open at first slide (or change to desired index)
+    try {
+      pswpLightbox.loadAndOpen(0);
+    } catch (e) {
+      console.error('Failed to open PhotoSwipe', e);
+    }
+    pswpLightbox.on('close', () => {
+      try { pswpLightbox.destroy(); } catch {}
+      pswpLightbox = null;
+    });
   }
 
   function closeProjectModal() {
