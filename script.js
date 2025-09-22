@@ -70,6 +70,7 @@
       {
         title: { en: 'Permits', es: 'Permisos constructivos' },
         description: { en: 'Complete permit management including drawings, submissions, and approvals.', es: 'Gestión completa de permisos incluyendo dibujos, envíos y aprobaciones municipales constructivas.' },
+        hide_read_more: true,
         preview_image: './assets/permit/image.png',
         images: [
           './assets/permit/image.png',
@@ -252,10 +253,12 @@
         const preview = proj.preview_image || (proj.images && proj.images[0]) || './assets/placeholder.svg';
         const totalImages = (proj.images || []).length;
         const thumbs = (proj.images || []).slice(0, 5);
+        const hideReadMore = proj.hide_read_more === true;
         fig.innerHTML = `
           <img src="${preview}" alt="${title}" loading="lazy" decoding="async" fetchpriority="low"
                sizes="(min-width: 940px) 25vw, (min-width: 640px) 50vw, 100vw" />
           <figcaption>${title}</figcaption>
+          ${hideReadMore ? '' : `
           <div class="thumb-strip">
             ${thumbs.map((src, i) => {
               const isLast = i === thumbs.length - 1;
@@ -264,10 +267,11 @@
               const moreClass = (isLast && extra > 0) ? ' more' : '';
               return `<button type=\"button\" class=\"thumb${moreClass}\" data-thumb-index=\"${i}\" aria-label=\"${lang==='es'?'Ver foto':'View photo'} ${i+1}\"><img src=\"${src}\" alt=\"\" loading=\"lazy\" decoding=\"async\" />${badge}</button>`;
             }).join('')}
-          </div>
+          </div>`}
+          ${hideReadMore ? '' : `
           <div class="card-actions">
             <button type="button" class="chip read-more">${lang === 'es' ? 'Leer más' : 'Read more'}</button>
-          </div>
+          </div>`}
         `;
         fig.addEventListener('click', () => safeOpen(section, idx));
         // Ensure activation on keyboard and touch (Android WebView quirks)
@@ -293,15 +297,7 @@
           ev.stopPropagation();
           openProjectInfo(section, idx);
         });
-        fig.addEventListener('touchend', (e) => {
-          // If click is not fired, use touchend as a fallback
-          // Avoid double-trigger if click will follow
-          if (e.cancelable) e.preventDefault();
-          // Ignore if touch on thumb strip or read-more chip
-          if (!e.target.closest('.thumb-strip') && !e.target.closest('.chip')) {
-            safeOpen(section, idx, 0);
-          }
-        }, { passive: false });
+        // Removed figure-level touchend to allow smooth native scrolling on mobile
         grid.appendChild(fig);
       });
     });
