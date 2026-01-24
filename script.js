@@ -256,22 +256,11 @@
         const hideReadMore = proj.hide_read_more === true;
         fig.innerHTML = `
           <img src="${preview}" alt="${title}" loading="lazy" decoding="async" fetchpriority="low"
-               sizes="(min-width: 940px) 25vw, (min-width: 640px) 50vw, 100vw" />
-          <figcaption>${title}</figcaption>
-          ${hideReadMore ? '' : `
-          <div class="thumb-strip">
-            ${thumbs.map((src, i) => {
-              const isLast = i === thumbs.length - 1;
-              const extra = Math.max(0, totalImages - thumbs.length);
-              const badge = (isLast && extra > 0) ? `<span class=\"more-badge\">+${extra}</span>` : '';
-              const moreClass = (isLast && extra > 0) ? ' more' : '';
-              return `<button type=\"button\" class=\"thumb${moreClass}\" data-thumb-index=\"${i}\" aria-label=\"${lang==='es'?'Ver foto':'View photo'} ${i+1}\"><img src=\"${src}\" alt=\"\" loading=\"lazy\" decoding=\"async\" />${badge}</button>`;
-            }).join('')}
-          </div>`}
-          ${hideReadMore ? '' : `
-          <div class="card-actions">
-            <button type="button" class="chip read-more">${lang === 'es' ? 'Leer más' : 'Read more'}</button>
-          </div>`}
+               sizes="(min-width: 940px) 33vw, (min-width: 640px) 50vw, 100vw" />
+          <figcaption>
+            <span>${title}</span>
+            ${!hideReadMore ? `<button class="chip read-more" aria-label="Read more about ${title}">${lang === 'es' ? 'Leer más' : 'Read more'}</button>` : ''}
+          </figcaption>
         `;
         // Guard against opening after a scroll gesture
         let drag = { down: false, moved: false, x: 0, y: 0 };
@@ -336,10 +325,11 @@
     const title = resolveText(data.title, lang);
     const desc = resolveText(data.description, lang);
     const images = (data.images || []).slice();
+    const captionHtml = `<div class="fancybox-caption__body"><h3>${title}</h3><p>${desc.replace(/\n/g, '<br>')}</p></div>`;
     const items = images.map((src) => ({
       src,
       type: 'image',
-      caption: ''
+      caption: captionHtml
     }));
 
     const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -349,6 +339,7 @@
         hideScrollbar: true,
         dragToClose: true,
         infinite: true,
+        mainClass: 'bucle-fancybox',
         Thumbs: { autoStart: false },
         Toolbar: {
           display: {
@@ -357,8 +348,14 @@
             right: ['close']
           }
         },
-        Images: { zoom: true, preload: 2 },
-        Carousel: { transition: 'fade', initialPage: startAt }
+        Images: { zoom: true, preload: 1 },
+        Carousel: {
+          transition: 'fade',
+          initialPage: startAt
+        },
+        caption: (fancybox, carousel, slide) => {
+          return slide.caption || '';
+        }
       });
     } catch (e) {
       console.error('Failed to open Fancybox', e);
@@ -477,10 +474,32 @@
     // Facebook is currently commented out in HTML; leave unset.
   }
 
+  function initScrollAnimations() {
+    const sections = $$('.fade-in-section');
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    sections.forEach(section => {
+      observer.observe(section);
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     initLang();
     bindEvents();
     initSocial();
     renderProjects();
+    initScrollAnimations();
   });
 })();
