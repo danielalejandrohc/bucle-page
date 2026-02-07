@@ -416,14 +416,14 @@ button.chip {
 }
 
 .btn.primary {
-  background: var(--text-primary);
-  color: var(--surface-primary);
-  border-color: var(--text-primary);
+  background: #FD6B3B;
+  color: #fff;
+  border-color: #FD6B3B;
 }
 
 .btn.primary:hover {
-  background: var(--brand);
-  border-color: var(--brand);
+  background: #e55a2d;
+  border-color: #e55a2d;
 }
 
 .btn.primary:active {
@@ -476,11 +476,11 @@ button.chip {
 
 .site-footer {
   margin-top: auto;
+  background: #FD6B3B;
 }
 
 .footer-stamp {
-  background: #FD6B3B;
-  padding: var(--space-lg) 0;
+  padding: var(--space-lg) var(--space-md);
   text-align: center;
 }
 
@@ -497,9 +497,7 @@ button.chip {
 }
 
 .footer-bottom {
-  background: #FD6B3B;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  padding: var(--space-lg) 0;
+  padding: var(--space-md) 0;
 }
 
 .footer-inner {
