@@ -7,7 +7,7 @@ A minimalist, responsive one-page site to showcase architecture services: Interi
 - Minimal, responsive layout using vanilla HTML/CSS/JS
 - Sections with photo grids (4 placeholders each; add more by duplicating a `figure.card`)
 - Multilingual (EN/ES) toggle with persisted choice
-- WhatsApp quick contact to +503 77432781
+- WhatsApp quick contact to +503 78507650
 - Footer with Instagram and Facebook link placeholders
 - Ready for GitHub Pages
 - Local dev server command
@@ -85,7 +85,7 @@ Alternatively, if you prefer the `docs/` method:
 
 ## WhatsApp Link
 
-The contact button uses `https://wa.me/50377432781` and auto-fills a localized message depending on the language toggle.
+The contact button uses `https://wa.me/50378507650` and auto-fills a localized message depending on the language toggle.
 
 ## License
 

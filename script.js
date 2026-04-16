@@ -220,7 +220,7 @@
     }
   };
 
-  const phone = '50366742281'; // E.164 without plus sign for wa.me
+  const phone = '50378507650'; // E.164 without plus sign for wa.me
 
   // -------- Projects rendering and modal --------
   function renderProjects() {
