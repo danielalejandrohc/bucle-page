@@ -39,6 +39,16 @@ A minimalist, responsive one-page site to showcase architecture services: Interi
 - Add more photos by duplicating `figure.card` items inside any `.grid`.
 - Set your social links in `script.js` (`initSocial()`), or directly update the `#instagram-link` and `#facebook-link` `href` values in `index.html`.
 
+## Asset Management
+
+To rename images in a project folder (e.g., `loma500`) to a correlative naming convention:
+1. Ensure the folder exists under `assets/projects/`.
+2. Run the utility script specifying the folder name:
+   ```bash
+   node rename-assets.js loma500
+   ```
+   *If no folder is specified, it defaults to `loma500`.*
+
 ## Local Development
 
 1. Install Node.js (LTS) if you don't have it.

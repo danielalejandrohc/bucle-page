@@ -7,6 +7,28 @@
   const projects = {
     interior: [
       {
+        title: { en: 'LOMA 500', es: 'LOMA 500' },
+        description: {
+          en: 'This family of four lives on the outskirts of San Salvador, where the countryside is part of their daily life. But the city calls them frequently — for work, commitments, and the life that also happens here. What they needed wasn\'t just an apartment: it was a place that welcomed them home.\n\nThe brief was clear from the start: Elegance without artifice, spaciousness without emptiness, warmth without saturation. Two adults and two children coming from large spaces needed to move freely, and that dictated every compositional decision.\n\nWe worked with a palette of earth and neutral tones, anchored by green — in the plants and an Evergreen Fog wall — acting as the single focal point of color in the space. Wood, natural materials, and textiles brought from Ilobasco, the clients\' hometown, were the common thread between who they are outside and what they wanted to feel inside.\n\nEvery piece has a provenance: Salvadoran artisans and artists, local hands in every detail. An existing niche revealed its potential and became a piece of custom-designed furniture — coffee station, bar, and storage in a single gesture. The apartment\'s natural light and ventilation were read as what they always were: a gift that only needed to be welcomed.',
+          es: 'Esta familia de cuatro vive en las afueras de San Salvador, donde el campo es parte de su cotidiano. Pero la ciudad los llama con frecuencia — por trabajo, por compromisos, por la vida que también ocurre aquí. Lo que necesitaban no era simplemente un apartamento: era un lugar que los recibiera como en casa.\n\nEl encargo fue claro desde el principio: Elegancia sin artificio, amplitud sin vacío, calidez sin saturación. Dos adultos y dos niños que vienen de espacios grandes necesitaban moverse libremente, y eso dictó cada decisión de composición.\n\nTrabajamos con una paleta de tonos tierra y neutros, anclada por el verde — en las plantas y en una pared en Evergreen Fog — que actúa como el único punto focal de color en el espacio. La madera, los materiales naturales y los textiles traídos de Ilobasco, tierra de origen de los clientes, fueron el hilo conductor entre lo que son afuera y lo que querían sentir adentro.\n\nCada pieza tiene procedencia: artesanos y artistas salvadoreños, manos locales en cada detalle. Un nicho existente reveló su potencial y se convirtió en mueble de diseño propio — coffee station, bar y almacenamiento en un solo gesto. La luz natural y la ventilación del apartamento se leyeron como lo que siempre fueron: un regalo que solo había que saber recibir.'
+        },
+        preview_image: './assets/projects/loma500/loma500-16.jpeg',
+        images: [
+          './assets/projects/loma500/loma500-16.jpeg',
+          './assets/projects/loma500/loma500-7.jpeg',
+          './assets/projects/loma500/loma500-15.jpeg',
+          './assets/projects/loma500/loma500-26.jpeg',
+          './assets/projects/loma500/loma500-34.jpeg',
+          './assets/projects/loma500/loma500-46.jpeg',
+          './assets/projects/loma500/loma500-48.jpeg',
+          './assets/projects/loma500/loma500-50.jpeg',
+          './assets/projects/loma500/loma500-57.jpeg',
+          './assets/projects/loma500/loma500-65.jpeg',
+          './assets/projects/loma500/loma500-69.jpeg',
+          './assets/projects/loma500/loma500-79.jpeg'
+        ]
+      },
+      {
         title: { en: 'TRELUM Apartment', es: 'Apartamento TRELUM' },
         description: {
           en: 'Located in the exclusive Torre Trelum, this apartment was conceived as a retreat of peace and relaxation for its owner, envisioned as an ideal space for single living and entertaining, taking advantage of its commanding view to the south of San Salvador.\n\nThe main challenge was to integrate his belongings into the design without compromising the harmony of the space, achieving a sophisticated and masculine atmosphere without becoming overdone.',
@@ -53,7 +75,7 @@
           './assets/projects/campo/R04.png',
           './assets/projects/campo/R05.png'
         ]
-      },
+      }
     ],
     remodeling: [
       {
