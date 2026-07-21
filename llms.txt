@@ -1,0 +1,24 @@
+# Bucle Studio
+
+> Residential architecture, interior design, and construction permit management, based in San Salvador, El Salvador.
+
+Bucle Studio designs homes and interiors for clients in El Salvador, including Salvadorans living abroad who are planning projects back home. Services are organized into three areas:
+
+- **Interior Design** — residential interiors: layout, furnishings, materials, and finishes.
+- **Architecture** — residential architecture and remodeling, from concept through construction drawings.
+- **Permit Management** — municipal construction permits: drawings, submissions, and approvals.
+
+Area served: San Salvador, Antiguo Cuscatlán, Santa Tecla, and El Salvador nationally.
+
+## Contact
+
+- WhatsApp: https://wa.me/50378507650
+- Email: hello@bucle.studio
+- Instagram: https://www.instagram.com/bucle.studio__/
+
+## Site
+
+- Homepage: https://bucle.studio/
+- Sitemap: https://bucle.studio/sitemap.xml
+
+The site is a single page (EN/ES toggle) covering all services and a project portfolio; no separate sub-pages exist.

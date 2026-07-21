@@ -458,15 +458,6 @@
 
     // Re-render projects to reflect localized titles
     renderProjects();
-    // If modal is open, update its localized content
-    const modal = $('#project-modal');
-    if (modal && modal.getAttribute('aria-hidden') === 'false') {
-      const data = projects[modalState.section]?.[modalState.index];
-      if (data) {
-        $('#modal-title', modal).textContent = resolveText(data.title, lang);
-        $('#modal-desc', modal).textContent = resolveText(data.description, lang);
-      }
-    }
   }
 
   function initLang() {

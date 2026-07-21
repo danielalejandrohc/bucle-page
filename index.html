@@ -21,6 +21,8 @@
   <title>Bucle Studio | Architecture and Interior Design in El Salvador | Construction Permits</title>
   <meta name="description" content="Bucle Studio: residential architecture, interior design, and construction permit management in El Salvador. Serving San Salvador, Antiguo Cuscatlán, Santa Tecla, and Salvadorans in the US planning projects in El Salvador." />
   <link rel="canonical" href="https://bucle.studio/" />
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+  <link rel="describedby" type="text/markdown" href="/llms.txt">
   <meta name="geo.region" content="SV" />
   <meta name="geo.placename" content="San Salvador" />
   <meta name="og:locale" content="es_SV" />
@@ -45,27 +47,65 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "Bucle Studio",
-    "url": "https://bucle.studio/",
-    "image": "https://bucle.studio/assets/logo.png",
-    "email": "hello@bucle.studio",
-    "telephone": "+50378507650",
-    "areaServed": [
-      {"@type": "Country", "name": "El Salvador"},
-      {"@type": "City", "name": "San Salvador"},
-      {"@type": "City", "name": "Antiguo Cuscatlán"},
-      {"@type": "City", "name": "Santa Tecla"}
-    ],
-    "sameAs": [
-      "https://wa.me/50378507650",
-      "https://www.instagram.com/bucle.studio__/"
-    ],
-    "description": "Residential architecture, interior design, and construction permit management in El Salvador.",
-    "makesOffer": [
-      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Residential Architecture"}},
-      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Interior Design"}},
-      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Construction Permit Management"}}
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://bucle.studio/#website",
+        "url": "https://bucle.studio/",
+        "name": "Bucle Studio",
+        "description": "Residential architecture, interior design, and construction permit management in El Salvador.",
+        "inLanguage": ["en", "es"],
+        "publisher": { "@id": "https://bucle.studio/#business" }
+      },
+      {
+        "@type": "LocalBusiness",
+        "@id": "https://bucle.studio/#business",
+        "name": "Bucle Studio",
+        "url": "https://bucle.studio/",
+        "image": "https://bucle.studio/assets/logo.png",
+        "email": "hello@bucle.studio",
+        "telephone": "+50378507650",
+        "areaServed": [
+          {"@type": "Country", "name": "El Salvador"},
+          {"@type": "City", "name": "San Salvador"},
+          {"@type": "City", "name": "Antiguo Cuscatlán"},
+          {"@type": "City", "name": "Santa Tecla"}
+        ],
+        "sameAs": [
+          "https://wa.me/50378507650",
+          "https://www.instagram.com/bucle.studio__/"
+        ],
+        "description": "Residential architecture, interior design, and construction permit management in El Salvador.",
+        "makesOffer": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "@id": "https://bucle.studio/#service-architecture",
+              "name": "Residential Architecture",
+              "provider": { "@id": "https://bucle.studio/#business" }
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "@id": "https://bucle.studio/#service-interior",
+              "name": "Interior Design",
+              "provider": { "@id": "https://bucle.studio/#business" }
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "@id": "https://bucle.studio/#service-permits",
+              "name": "Construction Permit Management",
+              "provider": { "@id": "https://bucle.studio/#business" }
+            }
+          }
+        ]
+      }
     ]
   }
   </script>
