@@ -5,4 +5,18 @@
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+  
+  <url>
+       <loc>https://bucle.studio/sitemap.xml</loc>
+       <lastmod>2026-07-21T19:33:39+00:00</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.8000</priority>
+  </url>
+  <url>
+       <loc>https://bucle.studio/llms.txt</loc>
+       <lastmod>2026-07-21T19:33:39+00:00</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.8000</priority>
+  </url>
+  
 </urlset>
