@@ -804,36 +804,56 @@ h1, h2, h3, h4 { color: var(--text); }
 .site-footer {
   background: var(--ink);
   color: rgba(255, 255, 255, 0.62);
-  padding: var(--s-8) 0 var(--s-6);
+  padding: 0 0 var(--s-6);
+}
+
+/* Full-bleed brand band. The colour is sampled from logo-landing.png itself
+   (#FF6C3C, marginally warmer than --accent) so the image edge is invisible
+   — using --accent here would leave a faint rectangle. */
+.footer-band {
+  background: #FF6C3C;
+  padding: var(--s-5) var(--gutter);
+  display: grid;
+  place-items: center;
+  margin-bottom: var(--s-8);
+}
+
+/* logo-landing.png is 1181×728 but the wordmark occupies only the middle
+   38.5% — the rest is baked-in orange margin. Left at its natural ratio the
+   band is mostly dead space, so the box is cropped to a 3:1 slice and
+   object-fit trims that margin off equally, top and bottom. The crop is safe:
+   the wordmark is centred and needs only ~2.4:1. */
+.footer-logo {
+  display: block;
+  width: clamp(150px, 26vw, 230px);
+  aspect-ratio: 3 / 1;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
 }
 
 .footer-inner {
   display: grid;
-  gap: var(--s-7);
+  gap: var(--s-6);
   grid-template-columns: 1fr;
   align-items: start;
 }
 
 @media (min-width: 820px) {
   .footer-inner {
-    grid-template-columns: 1.4fr 1fr auto;
+    grid-template-columns: auto 1fr auto;
     gap: var(--s-8);
     align-items: center;
   }
 }
 
-.footer-logo {
-  width: 110px;
-  height: auto;
-  margin-bottom: var(--s-4);
-}
-
 .footer-tagline {
   margin: 0;
-  max-width: 32ch;
   font-size: var(--fs-sm);
   line-height: 1.6;
+  letter-spacing: 0.02em;
   color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
 }
 
 .footer-nav {

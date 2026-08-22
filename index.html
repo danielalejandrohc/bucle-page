@@ -314,7 +314,7 @@
 
         <p class="studio-areas">
           <span data-i18n="areasLabel">Working in</span>
-          <strong data-i18n="areasList">San Salvador · Antiguo Cuscatlán · Santa Tecla · nationwide in El Salvador</strong>
+          <strong data-i18n="areasList">El Salvador, nationwide</strong>
         </p>
       </div>
     </section>
@@ -358,11 +358,15 @@
   </main>
 
   <footer class="site-footer">
+    <!-- The logo asset carries its own orange background, so it sits in a
+         full-bleed band of exactly that colour and reads as one surface
+         rather than a floating rectangle on the dark footer. -->
+    <div class="footer-band">
+      <img src="./assets/logo-landing.png" alt="Bucle" class="footer-logo" width="1181" height="728" loading="lazy" />
+    </div>
+
     <div class="container footer-inner">
-      <div class="footer-brand">
-        <img src="./assets/logo-landing.png" alt="Bucle Studio" class="footer-logo" width="120" height="60" loading="lazy" />
-        <p class="footer-tagline" data-i18n="brandShort">Bucle Architecture</p>
-      </div>
+      <p class="footer-tagline" data-i18n="brandShort">Bucle Architecture</p>
 
       <nav class="footer-nav" aria-label="Footer">
         <a href="#interior" data-i18n="navInterior">Interior</a>

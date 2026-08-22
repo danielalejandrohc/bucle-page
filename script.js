@@ -202,7 +202,7 @@
       process4Body: 'We stay involved on site so what gets built matches what was drawn.',
 
       areasLabel: 'Working in',                                // NEW
-      areasList: 'San Salvador · Antiguo Cuscatlán · Santa Tecla · nationwide in El Salvador',
+      areasList: 'El Salvador, nationwide',
 
       contactTitle: 'Contact Us',
       contactLead: 'Tell us about your project. We respond within 24 hours.',
@@ -270,7 +270,7 @@
       process4Body: 'Seguimos presentes en obra para que lo construido corresponda a lo dibujado.',
 
       areasLabel: 'Trabajamos en',                             // NEW
-      areasList: 'San Salvador · Antiguo Cuscatlán · Santa Tecla · todo El Salvador',
+      areasList: 'todo El Salvador',
 
       contactTitle: 'Contáctanos',
       contactLead: 'Cuéntanos sobre tu proyecto. Respondemos en 24 horas.',

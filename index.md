@@ -89,7 +89,7 @@ Bucle is a residential design practice based in San Salvador. We take on a small
 3. **Documentation** — Construction drawings and, where needed, the municipal permit submission.
 4. **Build** — We stay involved on site so what gets built matches what was drawn.
 
-Working in: San Salvador · Antiguo Cuscatlán · Santa Tecla · nationwide in El Salvador
+Working in: El Salvador, nationwide
 
 ## Contact Us
 
@@ -192,7 +192,7 @@ Bucle es un estudio de diseño residencial con base en San Salvador. Tomamos poc
 3. **Documentación** — Planos constructivos y, cuando hace falta, el ingreso del permiso municipal.
 4. **Obra** — Seguimos presentes en obra para que lo construido corresponda a lo dibujado.
 
-Trabajamos en: San Salvador · Antiguo Cuscatlán · Santa Tecla · todo El Salvador
+Trabajamos en: todo El Salvador
 
 ## Contáctanos
 
