@@ -138,7 +138,6 @@ h1, h2, h3, h4 { color: var(--text); }
 .site-header[data-over-hero] .nav a,
 .site-header[data-over-hero] .lang-toggle { color: #fff; }
 .site-header[data-over-hero] .logo { filter: brightness(0) invert(1); }
-.site-header[data-over-hero] .lang-toggle { border-color: rgba(255, 255, 255, 0.4); }
 .site-header[data-over-hero] .nav-toggle-bar { background: #fff; }
 
 /* …opaque once the page scrolls past it. */
@@ -163,9 +162,12 @@ h1, h2, h3, h4 { color: var(--text); }
   gap: var(--s-3);
   text-decoration: none;
   color: var(--text);
+  /* Without this the flex item refuses to shrink below its content width and
+     the nowrap wordmark runs underneath the header actions. */
+  min-width: 0;
 }
 
-.logo { width: 34px; height: 34px; transition: filter var(--t-mid); }
+.logo { width: 34px; height: 34px; flex-shrink: 0; transition: filter var(--t-mid); }
 
 .brand-name {
   font-size: var(--fs-xs);
@@ -175,6 +177,8 @@ h1, h2, h3, h4 { color: var(--text); }
   white-space: nowrap;
   color: var(--text);
   transition: color var(--t-mid);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .nav {
@@ -214,26 +218,44 @@ h1, h2, h3, h4 { color: var(--text); }
   display: flex;
   align-items: center;
   gap: var(--s-3);
+  flex-shrink: 0;   /* the brand yields space, never the controls */
 }
 
+/* Flat, not a pill: every other control in this design is square-edged, and
+   the rounded chip both clashed with them and stole width from the wordmark. */
 .lang-toggle {
+  position: relative;
   font-family: inherit;
   font-size: var(--fs-micro);
   font-weight: 600;
   letter-spacing: 0.14em;
   color: var(--text-muted);
   background: transparent;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  padding: 0.4rem 0.7rem;
+  border: 0;
+  border-radius: 0;
+  /* ~45px tap target without taking 45px of visual width. The negative
+     margin cancels the padding so the row height is unchanged. */
+  padding: 0.85rem var(--s-2);
+  margin: -0.85rem 0;
   cursor: pointer;
-  transition: color var(--t-fast), border-color var(--t-fast), background var(--t-fast);
+  transition: color var(--t-fast);
 }
-.lang-toggle:hover {
-  color: var(--text);
-  border-color: currentColor;
+
+.lang-toggle::after {
+  content: '';
+  position: absolute;
+  left: var(--s-2);
+  right: var(--s-2);
+  bottom: calc(0.85rem - 4px);
+  height: 1px;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--t-fast);
 }
-.site-header[data-over-hero] .lang-toggle:hover { background: rgba(255, 255, 255, 0.14); }
+
+.lang-toggle:hover { color: var(--text); }
+.lang-toggle:hover::after { opacity: 0.6; }
+.site-header[data-over-hero] .lang-toggle:hover { color: #fff; }
 
 .header-cta { display: none; }
 
@@ -1094,7 +1116,21 @@ h1, h2, h3, h4 { color: var(--text); }
   .site-header.menu-open .lang-toggle { color: var(--text); }
   .site-header.menu-open .logo { filter: none; }
   .site-header.menu-open .nav-toggle-bar { background: var(--text); }
-  .site-header.menu-open .lang-toggle { border-color: var(--line-strong); }
+}
+
+/* --- Narrow phones: "BUCLE ARQUITECTURA" is 18 tracked-out characters, and
+   at the desktop size the brand + toggle + menu button exceed a 360px
+   viewport. Tighten the wordmark rather than truncate or hide it. --- */
+@media (max-width: 599px) {
+  .header-inner { gap: var(--s-3); }
+  .brand { gap: var(--s-2); }
+  .logo { width: 30px; height: 30px; }
+  .brand-name { font-size: 0.6875rem; letter-spacing: 0.11em; }
+}
+
+@media (max-width: 389px) {
+  .brand-name { font-size: 0.625rem; letter-spacing: 0.07em; }
+  .header-actions { gap: var(--s-1); }
 }
 
 @media (max-width: 699px) {
