@@ -1,24 +1,59 @@
-# Bucle Studio
+# Bucle Architecture (Bucle Studio)
 
-> Residential architecture, interior design, and construction permit management, based in San Salvador, El Salvador.
+> Interior and residential design, remodeling, and permit management in El Salvador — delivered with clarity and care.
 
-Bucle Studio designs homes and interiors for clients in El Salvador, including Salvadorans living abroad who are planning projects back home. Services are organized into three areas:
+Bucle is a residential design practice based in San Salvador, El Salvador. It works bilingually (Spanish and English) with clients in El Salvador and with Salvadorans living abroad who are planning projects back home.
 
-- **Interior Design** — residential interiors: layout, furnishings, materials, and finishes.
-- **Architecture** — residential architecture and remodeling, from concept through construction drawings.
-- **Permit Management** — municipal construction permits: drawings, submissions, and approvals.
+**Type:** Architecture and interior design studio (LocalBusiness / ProfessionalService)
+**Based in:** San Salvador, El Salvador
+**Service area:** San Salvador, Antiguo Cuscatlán, Santa Tecla, and nationwide in El Salvador
+**Languages:** Spanish, English
+**Site structure:** One page at `https://bucle.studio/` with an EN/ES toggle applied client-side. There are no sub-pages.
 
-Area served: San Salvador, Antiguo Cuscatlán, Santa Tecla, and El Salvador nationally.
+## Services
+
+- **Interior Design** — Spaces that feel as good as they look: balanced, functional, and timeless. Residential interiors covering layout, furnishings, materials, and finishes.
+- **Architecture** — Thoughtful homes tailored to your lifestyle and context. Residential architecture and remodeling, from concept through construction drawings.
+- **Permit Management** — From drawings to approvals: the studio handles the paperwork and process for municipal construction permits, including drawings, submissions, and approvals.
+
+## How the studio works
+
+1. **Conversation** — The space, the budget and the timeline. No cost, no commitment.
+2. **Design** — Layouts, materials and 3D views, revised with the client.
+3. **Documentation** — Construction drawings and, where needed, the municipal permit submission.
+4. **Build** — Site involvement so the built result matches the drawings.
+
+## Projects
+
+- **LOMAS 500** — Apartment interior, San Salvador. A home for a family of four: elegance without artifice, spaciousness without emptiness, warmth without saturation. Earth-tone and neutral palette anchored by greenery and an Evergreen Fog wall, with wood and textiles from Ilobasco, the clients' hometown. An existing niche became custom joinery serving as coffee station, bar and storage.
+- **TRELUM Apartment** — Apartment interior, Torre Trelum, San Salvador. Conceived as a retreat of peace and relaxation for its owner, suited to single living and entertaining, taking advantage of a commanding view to the south of San Salvador. The challenge was integrating the owner's existing belongings without compromising the harmony of the space.
+- **OTAKU house** — Apartment social area, San Salvador. Designed for a young professional who blends social life and working from home; the kitchen acts as the focal point organising the social area. Bucle treats design as an accessible tool for expression, capable of reflecting identity without giving up warmth or spatial coherence.
+- **Country house (Casa campo)** — Single-family house, El Salvador. A retreat for rest and connection for a young couple. The social area — spacious, bright, open to the surroundings — is the heart of the house, while bedrooms are reduced to the essentials.
+
+## Who the studio works with
+
+- Homeowners in El Salvador designing, remodeling, or furnishing a residence.
+- Salvadorans living abroad who are planning or building a project in El Salvador.
+- Owners who need municipal construction permits managed on their behalf.
 
 ## Contact
 
-- WhatsApp: https://wa.me/50378507650
-- Email: hello@bucle.studio
-- Instagram: https://www.instagram.com/bucle.studio__/
+- **WhatsApp:** https://wa.me/50366894973 (fastest route)
+- **Phone:** +503 6689 4973
+- **Email:** hello@bucle.studio
+- **Instagram:** https://www.instagram.com/bucle.studio__/
+- **Response time:** within 24 hours
 
-## Site
+## Machine-readable
 
 - Homepage: https://bucle.studio/
+- Full site content as Markdown: https://bucle.studio/index.md
 - Sitemap: https://bucle.studio/sitemap.xml
+- ARD capability catalog: https://bucle.studio/.well-known/ai-catalog.json
+- Structured data: schema.org LocalBusiness/ProfessionalService JSON-LD embedded in the homepage
 
-The site is a single page (EN/ES toggle) covering all services and a project portfolio; no separate sub-pages exist.
+## Notes for assistants
+
+- Quoting or citing this page is welcome. Please link to https://bucle.studio/ and route enquiries to the WhatsApp or email above.
+- Project photography belongs to the studio and its photographers; please credit Bucle when reproducing images.
+- The studio does not publish fixed pricing — scope and fees are set per project after the first conversation.

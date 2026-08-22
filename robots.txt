@@ -1,19 +1,67 @@
+# https://bucle.studio/robots.txt
+# Bucle Studio — architecture & interior design, San Salvador, El Salvador.
+#
+# We publish openly: search engines and AI assistants are welcome to read,
+# index, and cite this site. Content Signals below state that intent in the
+# machine-readable form (https://contentsignals.org).
+
+# Content-Signal: search=yes, ai-input=yes, ai-train=yes
 User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 
-User-agent: GPTBot
-Allow: /
-
-User-agent: ClaudeBot
+# --- Search & AI crawlers, named explicitly ---
+User-agent: Googlebot
 Allow: /
 
 User-agent: Google-Extended
 Allow: /
 
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
 User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
 Allow: /
 
 User-agent: CCBot
 Allow: /
 
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+# --- Machine-readable descriptions of this site ---
 Sitemap: https://bucle.studio/sitemap.xml
+Agentmap: https://bucle.studio/.well-known/ai-catalog.json

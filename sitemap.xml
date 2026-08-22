@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://bucle.studio/</loc>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bucle.studio/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://bucle.studio/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bucle.studio/"/>
   </url>
-  
-  <url>
-       <loc>https://bucle.studio/sitemap.xml</loc>
-       <lastmod>2026-07-21T19:33:39+00:00</lastmod>
-       <changefreq>daily</changefreq>
-       <priority>0.8000</priority>
-  </url>
-  <url>
-       <loc>https://bucle.studio/llms.txt</loc>
-       <lastmod>2026-07-21T19:33:39+00:00</lastmod>
-       <changefreq>daily</changefreq>
-       <priority>0.8000</priority>
-  </url>
-  
 </urlset>

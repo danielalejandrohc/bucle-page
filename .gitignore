@@ -1,0 +1,10 @@
+# Dependencies (build-time only — GitHub Pages serves the static files)
+node_modules/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.log
+
+# Note: assets/derived/ IS committed on purpose. GitHub Pages has no build
+# step, so the generated WebP derivatives must be in the repo to be served.

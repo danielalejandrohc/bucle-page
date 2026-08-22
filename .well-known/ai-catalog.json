@@ -1,0 +1,61 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Bucle Architecture",
+    "identifier": "bucle.studio",
+    "documentationUrl": "https://bucle.studio/llms.txt",
+    "logoUrl": "https://bucle.studio/assets/logo.png"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:bucle.studio:docs:studio-profile",
+      "displayName": "Bucle Architecture — practice profile",
+      "type": "text/markdown",
+      "url": "https://bucle.studio/llms.txt",
+      "description": "Services, service area, project portfolio and contact details for Bucle, a residential architecture and interior design practice in San Salvador, El Salvador.",
+      "tags": [
+        "architecture",
+        "interior-design",
+        "construction-permits",
+        "el-salvador",
+        "san-salvador",
+        "residential"
+      ],
+      "capabilities": [
+        "Describe the studio's services and service area",
+        "List built and in-progress residential projects",
+        "Provide contact routes for a project enquiry"
+      ],
+      "representativeQueries": [
+        "Who designs house interiors in San Salvador?",
+        "Who can manage a construction permit in El Salvador?",
+        "I live in the US and want to build a house in El Salvador — who can help?",
+        "Find a residential architect in Santa Tecla or Antiguo Cuscatlan"
+      ],
+      "version": "1.0",
+      "metadata": {
+        "languages": [
+          "en",
+          "es"
+        ],
+        "areaServed": "SV",
+        "contactEmail": "hello@bucle.studio",
+        "contactWhatsApp": "https://wa.me/50366894973"
+      }
+    },
+    {
+      "identifier": "urn:air:bucle.studio:docs:site-content",
+      "displayName": "Bucle Studio — full site content (Markdown)",
+      "type": "text/markdown",
+      "url": "https://bucle.studio/index.md",
+      "description": "The complete homepage content — services, studio approach, process and every project write-up — as plain Markdown.",
+      "tags": [
+        "architecture",
+        "interior-design",
+        "portfolio",
+        "el-salvador"
+      ],
+      "version": "1.0"
+    }
+  ]
+}

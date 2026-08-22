@@ -1,0 +1,13 @@
+{
+  "$comment": "SINGLE SOURCE OF TRUTH for brand + contact details. Edit here, then run `npm run sync`. Never hand-edit a phone number, email, or social URL in index.html, script.js, llms.txt, README.md or .well-known/ai-catalog.json — the sync script overwrites them.",
+  "brand": {
+    "name": "Bucle Studio",
+    "url": "https://bucle.studio",
+    "instagramHandle": "bucle.studio__"
+  },
+  "contact": {
+    "phoneE164": "+50366894973",
+    "phoneDisplay": "+503 6689 4973",
+    "email": "hello@bucle.studio"
+  }
+}
