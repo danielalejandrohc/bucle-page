@@ -157,7 +157,7 @@
      ---------------------------------------------------------------------- */
   const translations = {
     en: {
-      brandName: 'Bucle Architecture',
+      brandName: 'Bucle',
       brandShort: 'Bucle Architecture',
       skipToContent: 'Skip to content',                       // NEW (accessibility)
       navInterior: 'Interior',
@@ -225,7 +225,7 @@
     },
 
     es: {
-      brandName: 'Bucle Arquitectura',
+      brandName: 'Bucle',
       brandShort: 'Bucle Arquitectura',
       skipToContent: 'Ir al contenido',                       // NEW (accessibility)
       navInterior: 'Interiores',

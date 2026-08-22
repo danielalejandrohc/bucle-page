@@ -1118,19 +1118,12 @@ h1, h2, h3, h4 { color: var(--text); }
   .site-header.menu-open .nav-toggle-bar { background: var(--text); }
 }
 
-/* --- Narrow phones: "BUCLE ARQUITECTURA" is 18 tracked-out characters, and
-   at the desktop size the brand + toggle + menu button exceed a 360px
-   viewport. Tighten the wordmark rather than truncate or hide it. --- */
+/* The wordmark is short ("BUCLE"), so it keeps its full tracking at every
+   width; only the row gap tightens. The shrink guards on .brand and
+   .header-actions above still protect the layout if the name ever grows. */
 @media (max-width: 599px) {
-  .header-inner { gap: var(--s-3); }
-  .brand { gap: var(--s-2); }
-  .logo { width: 30px; height: 30px; }
-  .brand-name { font-size: 0.6875rem; letter-spacing: 0.11em; }
-}
-
-@media (max-width: 389px) {
-  .brand-name { font-size: 0.625rem; letter-spacing: 0.07em; }
-  .header-actions { gap: var(--s-1); }
+  .header-inner { gap: var(--s-4); }
+  .logo { width: 32px; height: 32px; }
 }
 
 @media (max-width: 699px) {

@@ -79,7 +79,9 @@ function render(lang) {
   const d = translations[lang];
   const out = [];
 
-  out.push(`# ${d.brandName}`, '');
+  // brandName is the short visual wordmark ("Bucle"); the document heading
+  // an assistant reads should carry the fuller name.
+  out.push(`# ${d.brandShort}`, '');
   out.push(`> ${d.heroEyebrow}`, '');
   out.push(`## ${d.heroTitle}`, '', d.heroLead, '');
 
